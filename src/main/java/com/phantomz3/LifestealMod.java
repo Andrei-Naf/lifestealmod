@@ -114,13 +114,15 @@ public class LifestealMod implements ModInitializer {
 				playerMaxHealth = player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
 
 				if (playerMaxHealth <= 1.0) {
-					((ServerPlayerEntity) player).changeGameMode(GameMode.SPECTATOR);
-					player.sendMessage(
-							Text.literal("You lost all your hearts! You are now in spectator mode!")
-									.formatted(Formatting.GRAY),
-							true);
-
-					player.setHealth(1.0f);
+					 // Get the server instance
+    MinecraftServer server = player.getServer();
+    if (server != null) {
+        // Construct the ban command
+        String banCommand = "ban " + player.getName().getString() + " \"You have been banned for losing all your hearts.\"";
+        // Execute the ban command
+        server.getCommandManager().execute(server.getCommandSource(), banCommand);
+    }
+   
 
 					if (!player.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
 						player.getInventory().dropAll();
